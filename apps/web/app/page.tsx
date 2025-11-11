@@ -1,205 +1,145 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Target, TrendingUp, Zap, Brain, Trophy, BarChart3 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, Zap, Sun, Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 
-export default function HomePage() {
-  return (
-    <div className="flex min-h-screen flex-col">
-      {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Zap className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold font-heading">Quantum Grace</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="#features" className="text-sm font-medium hover:text-primary transition-colors">
-              Features
-            </Link>
-            <Link href="#how-it-works" className="text-sm font-medium hover:text-primary transition-colors">
-              How It Works
-            </Link>
-            <Link href="/auth/login" className="text-sm font-medium hover:text-primary transition-colors">
-              Login
-            </Link>
-            <Link href="/auth/register">
-              <Button>Get Started</Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
+export default function LandingPage() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
 
-      {/* Hero Section */}
-      <section className="container flex flex-col items-center justify-center gap-8 px-4 py-24 text-center md:py-32">
-        <div className="inline-flex items-center rounded-full border px-4 py-1.5 text-sm">
-          <Zap className="mr-2 h-4 w-4" />
-          <span>Your Personal Operating System</span>
-        </div>
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return (
+    <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background">
+      {/* Theme Toggle - Fixed top right */}
+      {mounted && (
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="fixed top-6 right-6 z-50 p-3 rounded-lg text-foreground hover:text-purple-500 hover:bg-purple-500/10 transition-all"
+          aria-label="Toggle theme"
+        >
+          {theme === 'dark' ? (
+            <Sun className="h-5 w-5" />
+          ) : (
+            <Moon className="h-5 w-5" />
+          )}
+        </motion.button>
+      )}
+      {/* Background Effects */}
+      <div className="absolute inset-0 -z-10">
+        {/* Gradient Orbs */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-purple-500/20 blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-violet-500/20 blur-3xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+        />
         
-        <h1 className="font-heading text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-          Track. Build. Evolve.
-        </h1>
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.03)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]" />
+      </div>
+
+      {/* Main Content */}
+      <div className="container relative z-10 flex flex-col items-center justify-center px-4 text-center max-w-5xl mx-auto">
         
-        <p className="max-w-[700px] text-lg text-muted-foreground md:text-xl">
-          Transform your daily habits into long-term success. Quantum Grace combines habit tracking, 
-          goal setting, and AI-powered insights to help you become your best self.
-        </p>
-        
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {/* Logo with Lightning Effect */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="mb-8"
+        >
+          <div className="relative inline-flex items-center justify-center">
+            {/* Pulsing glow */}
+            <motion.div
+              animate={{
+                boxShadow: [
+                  '0 0 20px rgba(168, 85, 247, 0.3)',
+                  '0 0 40px rgba(168, 85, 247, 0.5)',
+                  '0 0 20px rgba(168, 85, 247, 0.3)',
+                ],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute inset-0 rounded-full"
+            />
+            <Zap className="relative h-20 w-20 text-purple-600 dark:text-purple-400" />
+          </div>
+        </motion.div>
+
+        {/* Brand Name */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-br from-purple-600 via-purple-500 to-violet-600 bg-clip-text text-transparent"
+        >
+          Quantum Grace
+        </motion.h1>
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mb-12 leading-relaxed"
+        >
+          Transform your habits into momentum. Your personal growth command center.
+        </motion.p>
+
+        {/* CTA Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
+        >
           <Link href="/auth/register">
-            <Button size="lg" className="text-lg px-8 w-full sm:w-auto">
+            <Button size="lg" className="px-10 h-14 text-base bg-purple-600 hover:bg-purple-700 shadow-xl shadow-purple-500/30 text-white font-semibold transition-all hover:scale-105">
               Get Started Free
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
           <Link href="/auth/login">
-            <Button size="lg" variant="outline" className="text-lg px-8 w-full sm:w-auto">
+            <Button size="lg" variant="outline" className="px-10 h-14 text-base border-2 border-border hover:border-purple-500/50 hover:bg-purple-500/5 font-semibold transition-all">
               Sign In
             </Button>
           </Link>
-        </div>
+        </motion.div>
 
-        <p className="text-sm text-muted-foreground">
-          Free to start • No credit card required
-        </p>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="container px-4 py-24">
-        <div className="text-center mb-16">
-          <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
-            Everything You Need to Grow
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-[700px] mx-auto">
-            Powerful features designed to help you build better habits and achieve your goals.
-          </p>
-        </div>
-
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          <FeatureCard
-            icon={<Target className="h-10 w-10" />}
-            title="Habit Tracking"
-            description="Create and track daily, weekly, or custom habits. Visualize your progress with streaks and consistency metrics."
-          />
-          <FeatureCard
-            icon={<BarChart3 className="h-10 w-10" />}
-            title="Analytics Dashboard"
-            description="Get insights into your productivity patterns with beautiful charts, heatmaps, and trend analysis."
-          />
-          <FeatureCard
-            icon={<Brain className="h-10 w-10" />}
-            title="AI Coach"
-            description="Receive personalized insights and recommendations from your AI-powered Quantum Coach."
-          />
-          <FeatureCard
-            icon={<Trophy className="h-10 w-10" />}
-            title="Gamification"
-            description="Earn XP, unlock badges, and maintain streaks. Stay motivated with friendly competition."
-          />
-          <FeatureCard
-            icon={<TrendingUp className="h-10 w-10" />}
-            title="Goal Management"
-            description="Set meaningful goals, track progress, and celebrate achievements along your journey."
-          />
-          <FeatureCard
-            icon={<Zap className="h-10 w-10" />}
-            title="Pomodoro Timer"
-            description="Stay focused with built-in Pomodoro sessions that automatically log to your activity tracker."
-          />
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section id="how-it-works" className="container px-4 py-24 bg-muted/50">
-        <div className="text-center mb-16">
-          <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
-            Simple, Yet Powerful
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-[700px] mx-auto">
-            Get started in minutes and see results that compound over time.
-          </p>
-        </div>
-
-        <div className="grid gap-12 md:grid-cols-3">
-          <StepCard
-            number="1"
-            title="Track Your Habits"
-            description="Start by logging your daily habits and activities. What you track, you become."
-          />
-          <StepCard
-            number="2"
-            title="Build Consistency"
-            description="Build streaks and watch your progress compound. Small actions lead to big results."
-          />
-          <StepCard
-            number="3"
-            title="Evolve & Grow"
-            description="Use AI-powered insights to optimize your routines and achieve your goals faster."
-          />
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="container px-4 py-24">
-        <div className="rounded-2xl border bg-card p-8 text-center md:p-16">
-          <h2 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
-            Ready to Transform Your Life?
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-[600px] mx-auto mb-8">
-            Join thousands of people building better habits and achieving their goals with Quantum Grace.
-          </p>
-          <Link href="/auth/register">
-            <Button size="lg" className="gap-2">
-              Start Free Today
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-      </section>
+      </div>
 
       {/* Footer */}
-      <footer className="border-t py-12">
-        <div className="container px-4">
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <div className="flex items-center gap-2">
-              <Zap className="h-5 w-5 text-primary" />
-              <span className="font-bold font-heading">Quantum Grace</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              © 2025 Quantum Grace. All rights reserved.
-            </p>
-            <div className="flex gap-6">
-              <Link href="/legal/privacy" className="text-sm text-muted-foreground hover:text-primary">
-                Privacy
-              </Link>
-              <Link href="/legal/terms" className="text-sm text-muted-foreground hover:text-primary">
-                Terms
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
-
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
-  return (
-    <div className="group relative rounded-2xl border p-6 hover:shadow-lg transition-all">
-      <div className="mb-4 text-primary">{icon}</div>
-      <h3 className="font-heading text-xl font-bold mb-2">{title}</h3>
-      <p className="text-muted-foreground">{description}</p>
-    </div>
-  );
-}
-
-function StepCard({ number, title, description }: { number: string; title: string; description: string }) {
-  return (
-    <div className="text-center">
-      <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-lg mb-4">
-        {number}
-      </div>
-      <h3 className="font-heading text-xl font-bold mb-2">{title}</h3>
-      <p className="text-muted-foreground">{description}</p>
+      <motion.footer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 1.2 }}
+        className="absolute bottom-8 left-0 right-0 text-center"
+      >
+        <p className="text-xs text-muted-foreground">
+          © 2025 Quantum Grace. All rights reserved.
+        </p>
+      </motion.footer>
     </div>
   );
 }

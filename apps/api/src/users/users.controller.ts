@@ -7,6 +7,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
+import { Request as ExpressRequest } from 'express';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -21,22 +22,22 @@ export class UsersController {
 
   @Get('me')
   @ApiOperation({ summary: 'Get current user profile' })
-  async getMe(@Request() req) {
-    return this.usersService.getProfile(req.user.id);
+  async getMe(@Request() req: ExpressRequest) {
+    return this.usersService.getProfile((req as any).user.id);
   }
 
   @Patch('me')
   @ApiOperation({ summary: 'Update current user profile' })
-  async updateMe(@Request() req, @Body() updateUserDto: UpdateUserDto) {
-    const user = await this.usersService.update(req.user.id, updateUserDto);
+  async updateMe(@Request() req: ExpressRequest, @Body() updateUserDto: UpdateUserDto) {
+    const user = await this.usersService.update((req as any).user.id, updateUserDto);
     const { password, ...sanitized } = user;
     return sanitized;
   }
 
   @Delete('me')
   @ApiOperation({ summary: 'Delete current user account' })
-  async deleteMe(@Request() req) {
-    await this.usersService.delete(req.user.id);
+  async deleteMe(@Request() req: ExpressRequest) {
+    await this.usersService.delete((req as any).user.id);
     return { message: 'Account deleted successfully' };
   }
 }

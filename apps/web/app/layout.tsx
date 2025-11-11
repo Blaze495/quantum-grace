@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import { Providers } from '@/components/providers';
+import { ConditionalHeader } from '@/components/conditional-header';
+import { BackToTop } from '@/components/back-to-top';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 
@@ -60,7 +62,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <ConditionalHeader />
+          {children}
+          <BackToTop />
+        </Providers>
         <Toaster />
       </body>
     </html>

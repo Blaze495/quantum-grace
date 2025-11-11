@@ -12,13 +12,25 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   }
 
   async onModuleInit() {
-    await this.$connect();
-    this.logger.log('✅ Connected to database');
+    try {
+      await this.$connect();
+      this.logger.log('✅ Connected to database');
+    } catch (error) {
+      if (process.env.SKIP_DB === 'true') {
+        this.logger.warn('⚠️ Failed to connect to database, but continuing because SKIP_DB=true');
+      } else {
+        throw error;
+      }
+    }
   }
 
   async onModuleDestroy() {
-    await this.$disconnect();
-    this.logger.log('❌ Disconnected from database');
+    try {
+      await this.$disconnect();
+      this.logger.log('❌ Disconnected from database');
+    } catch {
+      // ignore disconnect errors in SKIP_DB mode
+    }
   }
 
   /**
@@ -29,8 +41,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
       throw new Error('Cannot clean database in production');
     }
 
-    const models = Reflect.ownKeys(this).filter((key) => key[0] !== '_');
+    const models = Reflect.ownKeys(this).filter((key) => {
+      const keyStr = String(key);
+      return keyStr[0] !== '_';
+    });
 
-    return Promise.all(models.map((modelKey) => this[modelKey as string].deleteMany()));
+    return Promise.all(models.map((modelKey) => (this as any)[modelKey as string].deleteMany()));
   }
 }

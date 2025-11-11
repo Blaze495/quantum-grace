@@ -65,4 +65,7 @@ async function bootstrap() {
   console.log(`🌍 Server is accessible from external networks`);
 }
 
-bootstrap();
+bootstrap().catch((error) => {
+  console.error('❌ Failed to start server:', error);
+  process.exit(1);
+});

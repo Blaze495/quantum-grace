@@ -109,4 +109,45 @@ export class AuthService {
       throw new UnauthorizedException('Invalid token');
     }
   }
+
+  /**
+   * Handle OAuth login (Google, GitHub, Apple)
+   * Finds or creates user, then generates JWT
+   */
+  async handleOAuthLogin(oauthUser: any) {
+    const { provider, providerId, email, name, picture } = oauthUser;
+
+    if (!email) {
+      throw new UnauthorizedException('Email is required from OAuth provider');
+    }
+
+    // Try to find user by email
+    let user = await this.usersService.findByEmail(email);
+
+    if (user) {
+      // Update existing user with OAuth info if needed
+      this.logger.log(`Existing user logged in via ${provider}: ${email}`);
+    } else {
+      // Create new user from OAuth data
+      user = await this.usersService.create({
+        email,
+        name,
+        password: null, // OAuth users don't have passwords
+        // You can add additional fields like:
+        // provider,
+        // providerId,
+        // picture,
+      });
+      
+      this.logger.log(`New user created via ${provider}: ${email}`);
+    }
+
+    // Generate JWT token
+    const access_token = this.generateToken(user.id, user.email);
+
+    return {
+      access_token,
+      user: this.sanitizeUser(user),
+    };
+  }
 }
